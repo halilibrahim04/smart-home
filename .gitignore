@@ -1,0 +1,31 @@
+# Ortam değişkenleri ve gizli parolalar (Burası kritik!)
+.env
+secret.key
+
+# Python / Geliştirme Cache dosyaları
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+
+# Sanal Ortamlar (Virtual Environments)
+venv/
+env/
+ENV/
+.venv/
+
+# Frontend bağımlılıkları ve Build
+node_modules/
+dist/
+build/
+
+# Veritabanı ve loglar
+*.sqlite3
+*.log
+
+# IDE ayarları
+.idea/
+.vscode/
+*.swp
