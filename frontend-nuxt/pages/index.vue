@@ -149,15 +149,92 @@ const logout = () => {
               </section>
           </div>
 
-          <!-- View 2 & 3: Konfigürasyon ve Güvenlik -->
-          <div v-if="activeView === 'config' && userRole === 'admin'" class="view-section active" style="padding:24px;">
-              <h2>🛠️ Sistem Konfigürasyonu</h2>
-              <p style="color:#94a3b8; margin-top:20px;">Vue State Yönetimi (activeView: 'config') ile bu sayfaya geçiş yaptınız.</p>
+          <!-- View 2: Konfigürasyon -->
+          <div v-if="activeView === 'config' && userRole === 'admin'" class="view-section active">
+              <header class="top-header glass-panel" style="margin-bottom: 24px;">
+                  <div class="header-search">
+                      <h1>Sistem ve Mekan Konfigürasyonu</h1>
+                      <p>Lokasyonlar (HOMES) tablosu ve genel ortam ayarları</p>
+                  </div>
+              </header>
+
+              <div class="device-grid">
+                  <!-- Mekanlar (Homes) Kartı -->
+                  <div class="device-card">
+                      <h3 style="margin-bottom:10px;">🏠 Kayıtlı Mekanlar (Homes)</h3>
+                      <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:15px;">Kayıtlı fiziksel lokasyonlarınızı yönetin.</p>
+                      
+                      <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid var(--glass-border);">
+                          <strong>Merkez Ofis</strong> <br> 
+                          <span style="font-size:0.8rem; color:#10b981;">İstanbul / TR</span>
+                      </div>
+                       <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--glass-border);">
+                          <strong>Datacenter Oda 1</strong> <br> 
+                          <span style="font-size:0.8rem; color:#38bdf8;">Ankara / TR</span>
+                      </div>
+
+                      <button class="btn btn-primary" style="width:100%; font-size:0.85rem; padding: 10px;">+ Yeni Ev/Mekan Ekle</button>
+                  </div>
+                  
+                  <!-- Ağ Ayarları Kartı -->
+                  <div class="device-card">
+                      <h3 style="margin-bottom:10px;">⚙️ Ağ & Veritabanı Ayarları</h3>
+                      <div class="form-group" style="margin-bottom: 12px;">
+                          <label style="font-size:0.8rem; color:var(--text-muted); display:block; margin-bottom:4px;">PostgreSQL Sunucu Adresi</label>
+                          <input type="text" value="localhost:5432" disabled style="padding:10px; border-radius:8px; background: rgba(255,255,255,0.05); color:white; border: 1px solid var(--glass-border); width:100%;">
+                      </div>
+                      <div class="form-group" style="margin-bottom: 12px;">
+                          <label style="font-size:0.8rem; color:var(--text-muted); display:block; margin-bottom:4px;">REST API Çalışma Portu</label>
+                          <input type="text" value="8000" disabled style="padding:10px; border-radius:8px; background: rgba(255,255,255,0.05); color:white; border: 1px solid var(--glass-border); width:100%;">
+                      </div>
+                  </div>
+              </div>
           </div>
           
-          <div v-if="activeView === 'security' && userRole === 'admin'" class="view-section active" style="padding:24px;">
-             <h2 style="color:#ef4444;">🛡️ Güvenlik İhlalleri ve Loglar</h2>
-             <p style="color:#94a3b8; margin-top:20px;">Sadece Admin Rolü ('userRole' === 'admin' reaktif değişkeni) ile izleyebilirsiniz.</p>
+          <!-- View 3: Güvenlik -->
+          <div v-if="activeView === 'security' && userRole === 'admin'" class="view-section active">
+              <header class="top-header glass-panel" style="margin-bottom: 24px;">
+                  <div class="header-search">
+                      <h1>Güvenlik ve Cihaz Logları</h1>
+                      <p>PostgreSQL 'device_logs' tablosu (JSONB destekli canlı izleme ekranı)</p>
+                  </div>
+              </header>
+
+              <div class="glass-panel" style="padding: 0; overflow:hidden;">
+                  <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                      <thead style="background: rgba(255,255,255,0.05); border-bottom: 1px solid var(--glass-border);">
+                          <tr>
+                              <th style="padding: 16px; font-weight: 500;">Tarih / Saat</th>
+                              <th style="padding: 16px; font-weight: 500;">Olay (Action)</th>
+                              <th style="padding: 16px; font-weight: 500;">Detaylar (JSONB Kolonu)</th>
+                              <th style="padding: 16px; font-weight: 500;">Risk</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <!-- Row 1 -->
+                          <tr style="border-bottom: 1px solid var(--glass-border);">
+                              <td style="padding: 16px; color: var(--text-muted);">Bugün 14:02</td>
+                              <td style="padding: 16px; color:white; font-weight:500;">CONNECTION_LOST</td>
+                              <td style="padding: 16px;"><code style="background: rgba(0,0,0,0.5); padding: 6px 10px; border-radius: 6px; font-size: 0.85rem; color:#f8fafc;">{"error": "timeout", "ping": "999ms"}</code></td>
+                              <td style="padding: 16px;"><span class="badge-disconnected" style="background: rgba(239, 68, 68, 0.15); padding:6px 10px; border-radius: 12px; font-size:0.75rem; font-weight:bold;">YÜKSEK</span></td>
+                          </tr>
+                          <!-- Row 2 -->
+                          <tr style="border-bottom: 1px solid var(--glass-border);">
+                              <td style="padding: 16px; color: var(--text-muted);">Bugün 11:20</td>
+                              <td style="padding: 16px; color:white; font-weight:500;">UNAUTHORIZED_ACCESS</td>
+                              <td style="padding: 16px;"><code style="background: rgba(0,0,0,0.5); padding: 6px 10px; border-radius: 6px; font-size: 0.85rem; color:#f8fafc;">{"ip": "45.22.19.1", "attempt": 3}</code></td>
+                              <td style="padding: 16px;"><span class="badge-disconnected" style="background: rgba(239, 68, 68, 0.15); padding:6px 10px; border-radius: 12px; font-size:0.75rem; font-weight:bold;">KRİTİK</span></td>
+                          </tr>
+                          <!-- Row 3 -->
+                          <tr>
+                              <td style="padding: 16px; color: var(--text-muted);">Dün 09:15</td>
+                              <td style="padding: 16px; color:white; font-weight:500;">FIRMWARE_UPDATE</td>
+                              <td style="padding: 16px;"><code style="background: rgba(0,0,0,0.5); padding: 6px 10px; border-radius: 6px; font-size: 0.85rem; color:#f8fafc;">{"version": "v2.1", "status": "success"}</code></td>
+                              <td style="padding: 16px;"><span class="badge-connected" style="background: rgba(16, 185, 129, 0.15); padding:6px 10px; border-radius: 12px; font-size:0.75rem; font-weight:bold;">DÜŞÜK</span></td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
           </div>
       </main>
     </div>
