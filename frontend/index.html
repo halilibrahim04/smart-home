@@ -1,19 +1,90 @@
-<!-- KAVRAM #33: Frontend ve Backend ilişkisi -->
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Smart Home - Frontend</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Home | Dashboard</title>
+    <!-- Modern Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="./index.css">
 </head>
-<body>
-    <h1>Smart Home Dashboard (Frontend)</h1>
-    
-    <p>Bu alan kullanıcının ekranda göreceği ve etkileşime gireceği kısımdır.</p>
-    <p>Buradaki veriler doğrudan veritabanından çekilmez! Javascript veya benzeri bir önyüz teknolojisi kullanılarak bizim yazdığımız Python Backend uygulamasındaki <strong>Controller</strong> katmanına istekte (HTTP Request) bulunulur.</p>
 
-    <!-- Örnek bir veri çekme metnidir -->
-    <div id="device-list">
-        Veriler Backend API'den bekleniyor...
+<body>
+
+    <!-- Background Orbs for Premium Glassmorphism Look -->
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+
+    <div class="layout-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar glass-panel">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <h2>SmartHome</h2>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+                        </path>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="#" class="nav-item">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4">
+                        </path>
+                    </svg>
+                    Konfigürasyon
+                </a>
+                <a href="#" class="nav-item">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                        </path>
+                    </svg>
+                    Güvenlik İhlalleri
+                </a>
+            </nav>
+
+            <div class="auth-status">
+                <div class="user-avatar">
+                    <img src="https://ui-avatars.com/api/?name=Admin+B&background=10b981&color=fff" alt="User">
+                </div>
+                <div class="user-info">
+                    <span class="user-name">Giriş Yapıldı</span>
+                    <!-- KAVRAM #51: RBAC Göstergesi -->
+                    <span class="user-role badge-admin">Yetki: ADMIN</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header glass-panel">
+                <div class="header-search">
+                    <h1>Cihaz Ağı Yönetimi</h1>
+                    <p>Sunucu Durumu: <span class="status-indicator online"></span> Tüm servisler aktif (200 OK)</p>
+                </div>
+                <button class="btn btn-primary" id="add-device-btn">
+                    + Yeni Cihaz Doğrula (POST)
+                </button>
+            </header>
+
+            <section class="device-grid" id="device-container">
+                <!-- Cihaz Kartları JavaScript ile buraya dinamik (REST API mantığıyla) basılacak -->
+            </section>
+        </main>
     </div>
+
+    <!-- Frontend Logic (Vanilla JS) -->
+    <script src="./app.js"></script>
 </body>
+
 </html>
