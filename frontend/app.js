@@ -1,97 +1,140 @@
 /**
- * KAVRAM #45 & KAVRAM #33: Request ve Response Modellemeleri (FE/BE İletişimi)
- * Bu JS dosyası, arkada yazdığımız Python API (Örn: device_api.py) noktalarına JSON istekleri yollar,
- * Backend'den gelen DTO formatındaki sonucu ekrana DOM Manipülasyonu ile çizer.
+ * Frontend SPA (Single Page Application) Router & Modal Logic
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. JWT Simülasyonu: LocalStorage'dan auth token çekiyormuş gibi davranalım
+
+    // 1. JWT Simülasyonu
     const authToken = "eyJhbGciOiJIUz.payload(user=U01,role=admin).X9signature";
-    
-    // 2. Cihazları Fetch (Get) edelim
+
+    // 2. İlk Yüklemede Cihazları Çek
     fetchDevicesFromBackend(authToken);
 
-    // 3. Ekle butonuna tıklandığında POST Request hazırlayalım
-    document.getElementById("add-device-btn").addEventListener("click", () => {
-        simulatePostRequest(authToken);
+    // 3. SPA Navigasyon Mantığı (Menü Değişimi)
+    const navItems = document.querySelectorAll('.nav-item');
+    const viewSections = document.querySelectorAll('.view-section');
+
+    navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            // Tüm aktif sınıfları temizle
+            navItems.forEach(n => n.classList.remove('active'));
+            viewSections.forEach(v => {
+                v.classList.remove('active');
+                v.classList.add('hidden');
+            });
+
+            // Tıklananı aktif et
+            item.classList.add('active');
+            const targetId = item.getAttribute('data-target');
+            const targetView = document.getElementById(targetId);
+
+            targetView.classList.remove('hidden');
+            setTimeout(() => targetView.classList.add('active'), 10); // Animasyon tetikleyici
+        });
     });
+
+    // 4. Modal (Açılır Pencere) Mantığı
+    const modal = document.getElementById('device-modal');
+    const addDeviceBtn = document.getElementById('add-device-btn');
+    const closeModalBtn = document.getElementById('close-modal');
+    const newDeviceForm = document.getElementById('new-device-form');
+
+    addDeviceBtn.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+
+    // Modal Dışı Boşluğa tıklanırsa kapat
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.add('hidden');
+        }
+    });
+
+    // 5. Dinamik Form Gönderimi (POST KAVRAM #37 & #44 DTO)
+    newDeviceForm.addEventListener('submit', (e) => {
+        e.preventDefault(); // Sayfanın yenilenmesini engeller
+
+        // Kullanıcının formdan girdiği verileri alıyoruz
+        const payloadDTO = {
+            brand_name: document.getElementById('input-dev-name').value,
+            type: document.getElementById('input-dev-type').value,
+            resolution: document.getElementById('input-dev-quality').value
+        };
+
+        // Backend'e yollanıyor simülasyonu
+        simulateDynamicPostRequest(authToken, payloadDTO);
+
+        // Formu temizle ve Kapat
+        newDeviceForm.reset();
+        modal.classList.add('hidden');
+    });
+
 });
 
-// GET Metodu Simülasyonu (Kavram #36, #37)
+// --- API SİMÜLASYONLARI ---
+
 async function fetchDevicesFromBackend(token) {
     const container = document.getElementById("device-container");
     container.innerHTML = "<p style='color:#94a3b8; padding:20px;'>API'den cihaz listesi çekiliyor (HTTP GET)...</p>";
 
-    // Backend sunucumuz aktif yayın yapmadığı için burada bir gecikme (delay) ile 
-    // başarılı bir REST API yanıtı dönmüş (HTTP 200 OK) gibi davranıyoruz.
     setTimeout(() => {
         // Backend DTO dönüş formatı simülasyonu
         const apiResponse = {
             status_code: 200,
             data: [
                 { id: "THERM-01", name: "Living Room Thermostat", type: "Climate", status: "online", ip: "192.168.1.50" },
-                { id: "CAM-4K-02", name: "Backyard Camera", type: "Security", status: "online", ip: "192.168.1.66" },
+                { id: "CAM-4K-02", name: "Backyard Security", type: "Security", status: "online", ip: "192.168.1.66" },
                 { id: "HEAT-X1", name: "Basement Heater", type: "Climate", status: "offline", ip: "192.168.1.18" }
             ]
         };
 
         renderDevices(apiResponse.data);
+    }, 800);
+}
+
+async function simulateDynamicPostRequest(token, payloadDTO) {
+    console.log("-> Backend'e Giden Request (POST):", payloadDTO);
+    alert(`Backend'e Giden Request (Dinamik Payload):\n${JSON.stringify(payloadDTO, null, 2)}`);
+
+    // Yüklenme aşaması simülasyonu
+    setTimeout(() => {
+        // Başarı (201 Created)
+        const apiResponse = {
+            status_code: 201,
+            data: {
+                device_id: "DEV-" + Math.floor(Math.random() * 9000 + 1000), // Rastgele ID,
+                brand_name: payloadDTO.brand_name,
+                type: payloadDTO.type,
+                status: "online"
+            }
+        };
+
+        // Yeni Cihazı Listeye Ekle
+        const grid = document.getElementById("device-container");
+        const newHTML = createDeviceCardHTML({
+            id: apiResponse.data.device_id,
+            name: apiResponse.data.brand_name,
+            type: apiResponse.data.type,
+            status: "online",
+            ip: "192.168.1.100" // Otomatik IP varsayımı
+        });
+
+        grid.insertAdjacentHTML('afterbegin', newHTML);
+
     }, 1200);
 }
 
-// POST Metodu Simülasyonu -> KAVRAM #37 & #44 (DTO Gönderimi)
-async function simulatePostRequest(token) {
-    try {
-        // 1. Yeni Data Transfer Objesi Payload'ı Hazırlama
-        const payloadDTO = {
-            brand_name: "Yeni Güvenlik Kamerası",
-            resolution: "4k"
-        };
-        
-        console.log("-> Backend'e Giden Request (POST):", payloadDTO);
-        
-        // Simüle edilmiş Backend Validation kontrolü (Kavram #46)
-        // Eğer çözünürlük 4k değil de "8k" olsaydı 400 Bad Request dönecekti.
-        alert(`Request (POST) Gönderiliyor:\n${JSON.stringify(payloadDTO, null, 2)}\n\nAPI Yanıtı Bekleniyor...`);
-        
-        // 2. Başarı Senaryosu Dönüşü (HTTP 201 Created)
-        setTimeout(() => {
-            const apiResponse = {
-                status_code: 201,
-                data: {
-                    device_id: "CAM-NEW",
-                    brand_name: payloadDTO.brand_name,
-                    status: "online"
-                }
-            };
-            
-            alert(`Backend API Yanıtı (HTTP 201 Created):\nBasariyla Olusturuldu!\nID: ${apiResponse.data.device_id}`);
-            
-            // Arayüzü güncelleyelim
-            const grid = document.getElementById("device-container");
-            const newHTML = createDeviceCardHTML({
-                id: apiResponse.data.device_id,
-                name: apiResponse.data.brand_name,
-                type: "Security",
-                status: "online",
-                ip: "192.168.1.XXX"
-            });
-            grid.insertAdjacentHTML('afterbegin', newHTML);
-            
-        }, 1500);
+// --- DOM RENDER YARDIMCILARI ---
 
-    } catch (error) {
-        // HTTP 500 veya 400 hatalarını frontend burada yakalar (Kavram 39)
-        console.error("API İletişim Hatası:", error);
-        alert("Bir hata oluştu: 500 Internal Server Error");
-    }
-}
-
-// DOM Rendering (Arayüz Çizimi)
 function renderDevices(devices) {
     const container = document.getElementById("device-container");
     container.innerHTML = "";
-    
     devices.forEach(device => {
         container.innerHTML += createDeviceCardHTML(device);
     });
@@ -101,7 +144,11 @@ function createDeviceCardHTML(device) {
     const isOnline = device.status === 'online';
     const statusText = isOnline ? 'Bağlı (Connected)' : 'Cevap Yok (Disconnected)';
     const statusClass = isOnline ? 'badge-connected' : 'badge-disconnected';
-    const icon = device.type === 'Security' ? '📷' : '🌡️';
+
+    let icon = '⚙️';
+    if (device.type === 'Security') icon = '📷';
+    if (device.type === 'Climate') icon = '🌡️';
+    if (device.type === 'Lighting') icon = '💡';
 
     return `
         <div class="device-card">
