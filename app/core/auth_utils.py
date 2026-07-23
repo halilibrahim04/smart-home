@@ -1,16 +1,22 @@
+import jwt
+import time
+
+SECRET_KEY = "SUPER_SECURE_KEY_123"
+
 def generate_jwt(user_id: str, role: str) -> str:
-    # Sahte (Mock) bir JWT üretici.
-    # Format: header.payload.signature
-    return f"eyJhbGciOiJIUz.payload(user={user_id},role={role}).X9signature"
+    payload = {
+        "sub": user_id,
+        "role": role,
+        "exp": time.time() + 3600
+    }
+    # KAVRAM #50: Hiçbir simülasyon olmadan Python'ın native PyJWT modülüyle Cripto imzalama.
+    return jwt.encode(payload, SECRET_KEY, algorithm="HS256")
 
 def decode_jwt(token: str) -> dict:
-    # Mock Token Çözücü
-    if not token or "signature" not in token:
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        return {"user_id": payload["sub"], "role": payload["role"]}
+    except jwt.ExpiredSignatureError:
         return None
-    
-    if "role=admin" in token:
-        return {"user_id": "U01", "role": "admin"}
-    elif "role=user" in token:
-        return {"user_id": "U02", "role": "user"}
-        
-    return None
+    except jwt.InvalidTokenError:
+        return None
