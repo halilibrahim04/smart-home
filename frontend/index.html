@@ -54,13 +54,17 @@
             </nav>
 
             <div class="auth-status">
-                <div class="user-avatar">
-                    <img src="https://ui-avatars.com/api/?name=Admin+B&background=10b981&color=fff" alt="User">
+                <div style="display: flex; gap: 12px; flex-grow: 1;">
+                    <div class="user-avatar">
+                        <img src="https://ui-avatars.com/api/?name=User&background=38bdf8&color=fff" id="avatar-img"
+                            alt="User">
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">Giriş Yapıldı</span>
+                        <span class="user-role" id="role-badge">Yetki: Kontrol Ediliyor</span>
+                    </div>
                 </div>
-                <div class="user-info">
-                    <span class="user-name">Giriş Yapıldı</span>
-                    <span class="user-role badge-admin">Yetki: ADMIN</span>
-                </div>
+                <button title="Çıkış Yap" id="logout-btn" class="btn-icon" style="padding: 10px;">🚪</button>
             </div>
         </aside>
 

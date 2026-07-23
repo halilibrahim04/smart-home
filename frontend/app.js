@@ -4,10 +4,27 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    // 1. JWT Simülasyonu
-    const authToken = "eyJhbGciOiJIUz.payload(user=U01,role=admin).X9signature";
+    // 1. KAVRAM #48 & #50: Kimlik Doğrulama (JWT Token var mı?)
+    const authToken = localStorage.getItem('smarthome_token');
+    const userRole = localStorage.getItem('smarthome_role');
 
-    // 2. İlk Yüklemede Cihazları Çek
+    // Eğer token yoksa güvenlik görevlisi (Middleware) kapıdan çevirir. Login ekranına atar.
+    if (!authToken || !userRole) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    // 2. KAVRAM #49 & #51: Authorization (Arayüz Yetki Kısıtlamaları)
+    applyRbacRulesToUI(userRole);
+
+    // 3. Çıkış Yapma Olayı (Logout)
+    document.getElementById('logout-btn').addEventListener('click', () => {
+        localStorage.removeItem('smarthome_token');
+        localStorage.removeItem('smarthome_role');
+        window.location.href = 'login.html';
+    });
+
+    // İlk Yüklemede Cihazları Çek
     fetchDevicesFromBackend(authToken);
 
     // 3. SPA Navigasyon Mantığı (Menü Değişimi)
@@ -76,6 +93,30 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+
+// --- RBAC YETKİLENDİRME (KULLANICI ARAYÜZÜ KISITLAMALARI) ---
+function applyRbacRulesToUI(role) {
+    const roleBadge = document.getElementById('role-badge');
+    const avatarImg = document.getElementById('avatar-img');
+
+    if (role === 'admin') {
+        roleBadge.innerText = 'Yetki: YÖNETİCİ';
+        roleBadge.className = 'user-role badge-admin';
+        avatarImg.src = "https://ui-avatars.com/api/?name=Admin&background=10b981&color=fff";
+    } else if (role === 'user') {
+        roleBadge.innerText = 'Yetki: STANDART ÜYE';
+        roleBadge.className = 'user-role badge-user';
+        avatarImg.src = "https://ui-avatars.com/api/?name=User&background=38bdf8&color=fff";
+
+        // STANDART ÜYE İSE KRİTİK İŞLEMLERİ (GÖRSEL OLARAK) YASAKLA
+        // Cihaz ekleme butonunu gizle
+        document.getElementById('add-device-btn').style.display = 'none';
+
+        // Konfigürasyon ve Güvenlik sekmelerine erişimi sol menüden sakla
+        document.querySelector('.nav-item[data-target="view-config"]').style.display = 'none';
+        document.querySelector('.nav-item[data-target="view-security"]').style.display = 'none';
+    }
+}
 
 // --- API SİMÜLASYONLARI ---
 
