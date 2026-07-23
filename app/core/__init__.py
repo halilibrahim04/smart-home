@@ -1,0 +1,3 @@
+"""
+ÇEKİRDEK GÜVENLİK (CORE) KATMANI
+"""
