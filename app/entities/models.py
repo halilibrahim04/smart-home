@@ -51,6 +51,7 @@ class Device(Base):
     mac_address = Column(String, unique=True)
     ip_address = Column(String)
     status = Column(String, default="offline")
+    settings = Column(JSONB, default={})
     created_at = Column(DateTime, default=datetime.utcnow)
 
     owner = relationship("User", back_populates="devices")

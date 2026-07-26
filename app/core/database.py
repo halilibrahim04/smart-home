@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:halil123@localhost:5432/smarthome"
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:halil123@127.0.0.1:5432/smarthome"
 
 # SQLAlchemy Motoru (Bağlantı Havuzu)
 engine = create_engine(SQLALCHEMY_DATABASE_URL)

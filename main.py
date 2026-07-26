@@ -18,6 +18,12 @@ app.add_middleware(
 
 auth_service = AuthService(UserRepository())
 
+from app.controllers.device_api import router as device_router
+app.include_router(device_router)
+
+from app.controllers.home_api import router as home_router
+app.include_router(home_router)
+
 class LoginPayload(BaseModel):
     email: str
     password: str

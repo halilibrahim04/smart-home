@@ -1,24 +1,33 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
+from typing import Optional
+from uuid import UUID
+from datetime import datetime
 
-@dataclass
-class DeviceCreateRequestDTO:
-    brand_name: str
-    resolution: str
+class DeviceCreateRequestDTO(BaseModel):
+    """
+    KAVRAM #37: Pydantic DTO
+    Frontend'den gelen cihaz verilerini (Name, Type) otomatik denetler (Validasyon).
+    """
+    name: str
+    device_type: str
+    home_id: str # Mekansız cihaz olamaz. Zorunlu (Required) kılındı.
 
-    def validate(self) -> list:
-        errors = []
-        if not self.brand_name or len(self.brand_name) < 3:
-            errors.append("Brand name must be at least 3 characters.")
-        
-        valid_resolutions = ["720p", "1080p", "4k"]
-        if self.resolution not in valid_resolutions:
-            errors.append(f"Invalid resolution. Must be one of {valid_resolutions}.")
-            
-        return errors
+class DeviceResponseDTO(BaseModel):
+    """
+    Backend'den Frontend'e Dönen Veri Tipi.
+    Config -> from_attributes = True özelliği, SQLAlchemy (ORM) Objesini doğrudan JSON'a çevirmeyi sağlar.
+    """
+    id: UUID
+    name: str
+    device_type: str
+    status: str
+    mac_address: Optional[str] = None
+    ip_address: Optional[str] = None
+    home_id: Optional[UUID] = None
+    settings: dict = {}
+    
+    class Config:
+        from_attributes = True
 
-
-@dataclass
-class DeviceResponseDTO:
-    device_id: str
-    brand_name: str
-    message: str
+class DeviceSettingsUpdateDTO(BaseModel):
+    settings: dict
