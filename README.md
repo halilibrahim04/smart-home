@@ -2,7 +2,7 @@
 
 A modern, full-stack Enterprise Smart Home Management Dashboard built with **FastAPI** (Python), **Nuxt 3** (Vue.js), and **PostgreSQL**. This system enables users to monitor hardware network status, securely control IoT device settings asynchronously, and view categorized high-risk security logs originating from IoT hardware.
 
-## 🚀 Features
+##  Features
 
 - **Event-Driven UI (Reactivity):** Seamless real-time state synchronization via Vue 3 proxies (no page refreshes during toggles or parameter adjustments).
 - **Relational & JSONB Postgres Modeling:** Devices and Locations linked structurally (SQL), while device metrics and sensor anomalies are managed inside ultra-fast JSONB document columns.
