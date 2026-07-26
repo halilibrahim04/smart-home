@@ -1,4 +1,4 @@
-# Smart Home Management System 🏠
+# Smart Home Management System
 
 A modern, full-stack Enterprise Smart Home Management Dashboard built with **FastAPI** (Python), **Nuxt 3** (Vue.js), and **PostgreSQL**. This system enables users to monitor hardware network status, securely control IoT device settings asynchronously, and view categorized high-risk security logs originating from IoT hardware.
 
@@ -10,7 +10,7 @@ A modern, full-stack Enterprise Smart Home Management Dashboard built with **Fas
 - **Glassmorphic UI Engine:** Native Nuxt implementation mimicking modern enterprise dashboard visuals (Blur layers, LED network indicators, animated modals).
 - **Hardware Agnostic Control Panel:** Specific capabilities adapted conditionally via component rendering (e.g., thermostat +/- control panels exclusive to "Climate" devices).
 
-## 🛠 Tech Stack
+##  Tech Stack
 
 ### Backend
 - **Framework:** FastAPI (High performance asynchronous Python framework)
@@ -23,7 +23,7 @@ A modern, full-stack Enterprise Smart Home Management Dashboard built with **Fas
 - **Styling:** Custom CSS3 with responsive Grid/Flex modules and Glassmorphism optics
 - **Integration:** Ultra-fast native `$fetch` API pipeline
 
-## 🏗 Setup & Installation
+## Setup & Installation
 
 ### 1. Database Configuration
 Ensure you have an instance of PostgreSQL running locally. Update connection credentials in `app/core/database.py` if necessary (Default is: `postgresql://postgres:halil123@127.0.0.1:5432/smarthome`).
@@ -57,6 +57,6 @@ npm run dev
 ```
 *UI will run on `http://localhost:3000`*
 
-## 🔑 Default Credentials (Seed Data)
+##  Default Credentials (Seed Data)
 - **Admin Panel Access:** `admin@sirket.com` / `admin123`
 - **Standard User Access:** `uye@sirket.com` / `uye123`
